@@ -5,23 +5,33 @@ use parser::*;
 use result::Result;
 use std::fs::{self, File};
 use std::io::{Error, ErrorKind};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 pub mod result {
     pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 }
 
 #[cmd]
-fn main(files: Vec<PathBuf>) -> Result<()> {
+fn main(
+    /// the path to the ldraw folder
+    #[opt(short, long)]
+    ldraw_path: PathBuf,
+
+    /// the output directory for the converted files
+    #[opt(short, long = "out-dir", default_value = "./")]
+    output_dir: PathBuf,
+
+    /// the ldraw files to convert
+    files: Vec<PathBuf>,
+) -> Result<()> {
     let cache = Cache::default();
-    let ldraw_path = Path::new("ldraw");
     if ldraw_path.is_dir() {
         files.iter().try_for_each(|path| -> Result<_> {
             let parser = Parser::new(&ldraw_path, &cache, false);
             let triangles = parser.parse(path)?;
             let out_file_name = path
                 .file_stem()
-                .map(|s| Path::new("stls").join(s).with_extension("stl"))
+                .map(|s| output_dir.join(s).with_extension("stl"))
                 .ok_or("Invalid output filename")?;
             fs::create_dir_all(&out_file_name.parent().ok_or(".")?)?;
             let mut file = File::create(out_file_name)?;
@@ -33,9 +43,6 @@ fn main(files: Vec<PathBuf>) -> Result<()> {
             Ok(())
         })
     } else {
-        Err(Error::new(
-            ErrorKind::NotFound,
-            "ldraw folder not found in current directory",
-        ))?
+        Err(Error::new(ErrorKind::NotFound, "ldraw folder not found"))?
     }
 }
