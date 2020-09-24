@@ -1,0 +1,6 @@
+- better more informative errors
+- convert a directory
+- more cli options
+  - non-hardcoded ldraw path
+  - set subpaths
+- reduce copies
