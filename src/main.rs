@@ -1,6 +1,6 @@
 mod parser;
 mod primatives;
-use argopt::cmd;
+use fncmd::fncmd;
 use parser::*;
 use result::Result;
 use std::fs::{self, File};
@@ -11,7 +11,7 @@ pub mod result {
     pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 }
 
-#[cmd]
+#[fncmd]
 fn main(
     /// the path to the ldraw folder
     #[opt(short, long)]

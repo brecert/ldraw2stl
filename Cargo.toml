@@ -1,16 +1,15 @@
 [package]
 name = "ldraw2stl"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["brecert <11599528+Brecert@users.noreply.github.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+fncmd = "1.2.0"
 stl_io = "0.4.2"
 vecmat = "0.4.1"
-argopt = "0.1.1"
-structopt = "0.3.17"
 
 [[bin]]
 name = "ldraw2stl"
